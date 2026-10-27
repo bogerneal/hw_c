@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Power Lab｜家庭用電預測實驗室</title>
+  <meta name="description" content="用 Lasso 特徵選擇、自迴歸與多元線性回歸探索家庭用電，互動比較模型、調整情境並查看預測區間。">
+  <meta name="theme-color" content="#11665d">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="data.js"></script><script defer src="app.js"></script>
+</head>
+<body>
+<a class="skip" href="#workspace">跳至預測工作區</a>
+<header><div class="nav-wrap"><a class="brand" href="#"><span class="brand-mark">ϟ</span>Power<span>Lab</span><small>家庭用電實驗室</small></a><nav aria-label="主要導覽"><a class="nav-active" href="#workspace">預測工作區</a><a href="#methodology">方法說明</a><a href="https://github.com/bogerneal/1014" target="_blank" rel="noopener">參考專案 ↗</a></nav></div></header>
+<main>
+<section class="hero">
+ <div><div class="eyebrow"><span class="status-dot"></span> EVERYDAY ENERGY, UNDERSTOOD</div><h1>看懂用電的節奏，<br>探索明天的可能。</h1><p>從歷史用電到下一天預測。切換模型、調整情境，<br class="desktop">讓每一個數字，都有可以理解的依據。</p><div class="tags"><span>Lasso 特徵選擇</span><span>AR 自迴歸</span><span>多元線性回歸</span></div></div>
+ <div class="hero-visual" aria-hidden="true"><div class="visual-top"><span>HOUSEHOLD ENERGY / 01</span><span>kW</span></div><svg viewBox="0 0 380 180"><defs><linearGradient id="glow" x2="0" y2="1"><stop stop-color="#57ad96" stop-opacity=".25"/><stop offset="1" stop-color="#57ad96" stop-opacity="0"/></linearGradient></defs><g stroke="#d4e4dd" stroke-width="1"><path d="M10 40H370M10 80H370M10 120H370M10 160H370"/><path d="M50 20V165M120 20V165M190 20V165M260 20V165M330 20V165"/></g><path d="M225 83L279 36L333 83V144H225Z" fill="#e8f1eb" stroke="#2c7769" stroke-width="2"/><path d="M215 86L279 29L343 86M264 144V105H293V144" fill="none" stroke="#2c7769" stroke-width="2"/><path d="M10 145L38 132L62 141L86 83L110 110L136 98L158 128L182 64L205 93L231 76L255 98L280 67L306 82L332 59L370 70V170H10Z" fill="url(#glow)"/><path d="M10 145L38 132L62 141L86 83L110 110L136 98L158 128L182 64L205 93" fill="none" stroke="#167c6c" stroke-width="3"/><path d="M205 93L231 76L255 98L280 67L306 82L332 59L370 70" fill="none" stroke="#167c6c" stroke-width="3" stroke-dasharray="5 5"/><circle cx="205" cy="93" r="5" fill="#167c6c" stroke="#fff" stroke-width="3"/></svg><div class="visual-bottom"><span>歷史觀測 <i></i> 未來預測</span><b>每一天，都有跡可循。</b></div></div>
+</section>
+<div class="dataset-strip"><span><span class="status-dot"></span><strong>家庭用電資料已載入</strong></span><span>2,075,259 筆分鐘資料 <b>／</b> 1,441 日建模資料 <b>／</b> 法國單一家庭</span><button class="text-button" id="view-data">檢視資料 ↗</button></div>
+<div class="workspace" id="workspace">
+ <aside>
+  <section class="card model-card"><div class="section-heading"><span class="step">01</span><h2>選擇預測方法</h2></div><p class="muted">相同測試期間，兩種觀察角度。</p>
+   <fieldset class="model-options"><legend class="sr-only">預測模型</legend>
+    <label class="model-option"><input type="radio" name="model" value="ar" checked><span><strong>AR 自迴歸</strong><small>從過去的功率，預測下一天</small></span><b>01</b></label>
+    <label class="model-option"><input type="radio" name="model" value="mlr"><span><strong>多元線性回歸</strong><small>結合電壓、分表等歷史資訊</small></span><b>02</b></label>
+   </fieldset>
+   <div class="feature-title"><span>Lasso 保留特徵</span><strong id="feature-count">—</strong></div><div class="selection-bar"><span id="selection-fill"></span></div><p id="model-description" class="tiny"></p>
+   <details><summary>查看選中的歷史特徵</summary><div id="feature-list" class="feature-list"></div></details>
+   <div class="split-box"><div><span>訓練樣本</span><strong>1,122</strong></div><div><span>有效測試日</span><strong>276</strong></div><div class="split-track"><i></i></div><small>按時間切分 80% / 20% · 不隨機打散</small></div>
+  </section>
+  <section class="card compact-card"><div class="section-heading"><span class="step">02</span><h2>探索預測情境</h2></div><p class="muted">如果昨天的用電不同，<br>明天的預測會怎麼變？</p><button class="button primary full" id="go-scenario">調整歷史值，試算預測 <span>↗</span></button><p class="tiny">使用已擬合模型即時計算，不重新訓練 Lasso。</p></section>
+  <div class="aside-note"><span>ⓘ</span><p>預測目標是<strong>每日平均功率（kW）</strong>，不是每日累計電能（kWh）。</p></div>
+ </aside>
+ <div class="results">
+  <div class="results-heading"><div><div class="eyebrow">YOUR ENERGY, EXPLAINED</div><h2>模型表現總覽</h2></div><button class="button secondary" id="export-report">↓ 匯出目前報告</button></div>
+  <div class="metrics" aria-live="polite"><article class="metric"><span>測試 RMSE <small>kW</small></span><strong id="metric-rmse">—</strong><p>均方根誤差 · 越低越好</p></article><article class="metric"><span>測試 R²</span><strong id="metric-r2">—</strong><p>決定係數 · 越高越好</p></article><article class="metric"><span>誤差在 ±10% 內</span><strong id="metric-accuracy">—</strong><p>自訂回歸準確率</p></article></div>
+  <div class="summary-bar"><span>✓</span><p id="score-summary"></p><span class="badge">固定訓練模型</span></div>
+  <div class="tabs" role="tablist" aria-label="分析檢視"><button role="tab" id="tab-forecast" aria-selected="true" aria-controls="panel-forecast" data-tab="forecast">預測走勢</button><button role="tab" id="tab-scenario" aria-selected="false" aria-controls="panel-scenario" tabindex="-1" data-tab="scenario">情境試算</button><button role="tab" id="tab-compare" aria-selected="false" aria-controls="panel-compare" tabindex="-1" data-tab="compare">模型比較</button><button role="tab" id="tab-data" aria-selected="false" aria-controls="panel-data" tabindex="-1" data-tab="data">資料探索</button></div>
+  <section id="panel-forecast" role="tabpanel" aria-labelledby="tab-forecast">
+   <article class="card"><div class="chart-heading"><div><h3>每一天的用電，與模型的預測</h3><p class="muted">逐日一步預測 · 當日預測只使用之前已知的資料</p></div><button class="text-button" id="reset-dates">↺ 全部期間</button></div>
+    <div class="chart-tools"><label>起始日<input id="date-start" type="date" min="2010-02-11" max="2010-11-26" value="2010-02-11"></label><span class="date-separator">—</span><label>結束日<input id="date-end" type="date" min="2010-02-11" max="2010-11-26" value="2010-11-26"></label><label class="check"><input id="show-interval" type="checkbox" checked>95% 預測區間</label><label class="check"><input id="show-compare" type="checkbox">疊加另一模型</label></div>
+    <p id="date-error" class="error" role="alert" hidden></p>
+    <div class="legend"><span><i class="actual"></i>實際觀測</span><span><i class="ar"></i>AR</span><span><i class="mlr"></i>多元線性回歸</span><span><i class="interval"></i>所選模型區間</span></div>
+    <div id="test-chart" class="chart"></div>
+    <div class="cursor-control"><label for="date-cursor">逐日查看</label><input id="date-cursor" type="range" min="0" max="288" value="0"><output id="point-detail"></output></div>
+    <p class="tiny">圖表可用滑鼠或觸控查看日期；也可用「逐日查看」滑桿。缺失真值保留空白，不納入指標；頂端指標會隨日期範圍更新。</p>
+   </article>
+   <article class="card future-card"><div class="chart-heading"><div><span class="eyebrow">BEYOND THE DATASET</span><h3>資料結束後的預測</h3></div><label class="horizon-label" for="horizon">預測天數 <strong id="horizon-value">30 天</strong></label></div><input id="horizon" type="range" min="1" max="30" value="30"><div class="forecast-summary"><div><span>所選未來期間平均預測</span><strong id="future-mean">—</strong></div><p id="future-method"></p></div><div id="future-chart" class="chart"></div><div class="card-bottom"><p class="tiny">從 2010-11-27 開始，非今天的即時預報；未來沒有真值，不能計算準確率。區間為各日邊際區間。</p><button class="button secondary" id="download-future">↓ 預測 CSV</button></div></article>
+  </section>
+  <section id="panel-scenario" role="tabpanel" aria-labelledby="tab-scenario" hidden>
+   <article class="card"><div class="chart-heading"><div><h3>用你的假設，探索下一天</h3><p class="muted">輸入選中特徵的歷史日平均，模型即時計算。</p></div><button class="text-button" id="reset-scenario">↺ 重設範例</button></div><div class="scenario-grid"><div><p class="info-note">落後 1 天＝昨天；落後 7 天＝一週前。滑桿範圍是訓練資料範圍，數字欄也可輸入其他非負值。</p><div id="scenario-inputs"></div></div><div class="scenario-result"><div class="eyebrow">NEXT-DAY ESTIMATE</div><h3>下一天平均功率</h3><div id="scenario-result" aria-live="polite"><strong id="scenario-mean">—</strong><span class="unit">kW</span><div class="interval-display"><span>95% 新觀測預測區間</span><b id="scenario-interval">—</b></div><p id="scenario-change"></p></div><p id="scenario-error" class="error" role="alert" hidden></p><p id="extrapolation" class="tiny"></p><div class="scenario-divider"></div><p class="tiny">以全部歷史資料重新擬合的模型計算。調整輸入不會改變測試成績，這不是設備開關的因果模擬。</p><p class="tiny">範例使用資料終點已知歷史；末日資料不足 90%，部分值沿用之前有效日。區間未納入 Lasso 選擇的不確定性。</p><button class="button secondary full" id="export-scenario">↓ 下載情境 JSON</button></div></div></article>
+   <article class="card"><h3>模型如何組合這些資訊？</h3><p class="muted">預測＝截距＋各歷史特徵乘上其係數。以下為全資料重訓的情境模型。</p><div id="equation" class="equation"></div><p class="tiny">係數的量綱依輸入欄位而異，不能直接以大小判定重要性。</p></article>
+  </section>
+  <section id="panel-compare" role="tabpanel" aria-labelledby="tab-compare" hidden>
+   <article class="card"><div class="chart-heading"><div><h3>兩種方法，一起看</h3><p class="muted" id="compare-period"></p></div><span class="badge">相同有效評分日期</span></div><div id="comparison-bars" class="comparison-bars"></div><div class="table-scroll"><table><thead><tr><th>評估指標</th><th>AR</th><th>多元線性回歸</th><th>前一天基準</th><th>前一週基準</th></tr></thead><tbody id="comparison-table"></tbody></table></div><p class="tiny">較佳 RMSE 不代表所有指標都較佳。兩版候選特徵不同，不能把差異只歸因於模型種類；不要反覆依測試分數挑模型。</p></article>
+   <article class="card"><div class="chart-heading"><h3>目前模型：Lasso 特徵與線性係數</h3><span id="alpha-label" class="badge"></span></div><p class="muted" id="cv-label"></p><div class="table-scroll"><table><thead><tr><th>歷史特徵</th><th>落後天數</th><th>Lasso 係數</th><th>最終訓練係數</th></tr></thead><tbody id="coefficient-table"></tbody></table></div><p class="tiny">Lasso 使用標準化特徵，最終模型使用原始尺度；此表為訓練期模型，與情境試算的全資料重訓係數不同。</p></article>
+  </section>
+  <section id="panel-data" role="tabpanel" aria-labelledby="tab-data" hidden>
+   <article class="card"><div class="chart-heading"><div><h3>每日資料探索</h3><p class="muted">原始分鐘資料聚合後的觀測，未顯示補值代替真值。</p></div><a class="button secondary" href="daily_data.csv" download>↓ 每日 CSV</a></div><div class="data-tools"><label for="data-year">年份</label><select id="data-year"><option value="all">全部年份</option><option>2006</option><option>2007</option><option>2008</option><option>2009</option><option selected>2010</option></select><label for="data-quality">資料品質</label><select id="data-quality"><option value="all">全部資料</option><option value="valid">有效觀測</option><option value="missing">不足 90%／缺失</option></select><span id="data-count" class="muted"></span></div><div class="table-scroll"><table><thead><tr><th>日期</th><th>平均功率 kW</th><th>電壓 V</th><th>電流 A</th><th>有效分鐘</th><th>區段</th></tr></thead><tbody id="data-table"></tbody></table></div><div class="pagination"><button id="prev-page" class="button secondary">← 上一頁</button><span id="page-info"></span><button id="next-page" class="button secondary">下一頁 →</button></div></article>
+   <article class="card"><h3>資料與分析下載</h3><div class="download-links"><a href="dataset_description.md" download>資料集詳細說明 ↗</a><a href="reports/ar/prediction_report.md" download>AR 分析報告 ↗</a><a href="reports/mlr/prediction_report.md" download>多元線性回歸分析報告 ↗</a></div><p class="tiny">完整 Markdown 報告搭配本專案 reports 目錄中的圖表與 CSV 閱讀。分鐘原始檔可由下方資料來源取得。</p></article>
+  </section>
+ </div>
+</div>
+<section class="methodology" id="methodology"><div><div class="eyebrow">BEHIND THE NUMBERS</div><h2>理解預測，<br>也理解它的邊界。</h2></div><article><h3>先看過去，再預測未來</h3><p>Lasso 在訓練期內以 5 折時間序列驗證選擇特徵，標準化只使用各折訓練資料。模型只讀取預測日之前的值。每日有效分鐘少於 90% 時，以過去值補足輸入，評分排除缺失真值。</p></article><article><h3>區間，是不確定性的提醒</h3><p>95% 預測區間針對新的觀測值，不是平均值信賴區間。它依賴誤差假設，也未校正特徵選擇。這是一戶法國家庭的歷史資料，結果不代表所有家庭。</p></article></section>
+</main>
+<footer><a class="brand" href="#"><span class="brand-mark">ϟ</span>Power<span>Lab</span></a><p>以數據理解日常，以區間保留可能。</p><a href="https://archive.ics.uci.edu/dataset/235/individual+household+electric+power+consumption" target="_blank" rel="noopener">UCI 資料來源 ↗</a></footer>
+<div id="toast" class="toast" role="status" hidden></div><noscript><p>請啟用 JavaScript 以使用互動式圖表與預測。分析報告仍可從 reports 目錄取得。</p></noscript>
+</body></html>

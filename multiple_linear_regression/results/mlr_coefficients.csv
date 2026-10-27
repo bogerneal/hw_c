@@ -1,0 +1,12 @@
+feature,coefficient
+const,-1.1270945947349942
+Global_active_power_lag_1,0.4338189841392113
+Global_active_power_lag_3,0.16989577634020497
+Global_active_power_lag_7,0.1626985227371051
+Global_active_power_lag_14,0.06764286724298246
+Global_reactive_power_lag_2,-0.8089404681944531
+Global_reactive_power_lag_30,-0.5205770719951757
+Voltage_lag_2,0.006057739987383522
+Sub_metering_1_lag_14,0.024341091142827773
+Sub_metering_2_lag_1,-0.035502518374210076
+Sub_metering_3_lag_2,0.00487919060554621

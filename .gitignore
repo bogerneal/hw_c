@@ -1,0 +1,10 @@
+.venv/
+.tools/
+__pycache__/
+.env
+.env.*
+!.env.example
+node_modules/
+.sites-runtime/
+qa-output/
+power_forecast_site/.openai/
