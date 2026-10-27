@@ -2,7 +2,9 @@
 
 以 **Lasso 特徵選擇**搭配 **AR 自迴歸**及**多元線性回歸（MLR）**，分析家庭用電資料並提供繁體中文互動網站。
 
-GitHub Pages 預定網址：<https://bogerneal.github.io/hw_c/>。首次部署成功後即可公開瀏覽，無須登入。
+公開網站：<https://bogerneal.github.io/hw_c/>，已成功部署至 GitHub Pages，無須登入。
+
+GitHub 儲存庫：<https://github.com/bogerneal/hw_c>。
 
 ## 互動網站
 
